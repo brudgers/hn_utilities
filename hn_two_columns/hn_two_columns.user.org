@@ -1,0 +1,166 @@
+#+Title: Two column layout for Hacker News
+#+OPTIONS: num:nil ^:{}
+#+PROPERTY: header-args:js :tangle yes
+* Preface
+This code is designed to run as a user script in FireFox using GreaseMonkey. It creates a two column layout for the Hacker News Main page and similar Hacker News pages that are lists of thirty stories.
+
+It should also run in Chrome or Chromium using the TamperMonkey plugin. However, TamperMonkey's implementation does not allow it to read files and the code must be copy pasted into the TamperMonkey editor or imported with some sort of database workaround if such a thing exists.
+* Introduction: HN's HTML
+There's a lot of griping about Hacker News's use of tables as if it was 1997...I've committed some of it (along with cursing). Usually it is motivated by the idea that CSS [and particularly CSS grids] would be better.
+
+I'm pretty much convinced that it would not. Organizing an HTML page with tables versus a CSS grid means that a page's structure can be generated recursively by a server side program more directly. There's no keeping track of which =<div>= gets some class to  =<float-left>= and which does not and hence will appear on the right (hopefully if all goes well). The first =<td>= will be left of the next. The first =<tr>= will be above the next.
+
+Sequences are an excellent way of organizing information left2right and top2bottom without a lot of hand-crafted design effort and a letting the browser handle as much of the layout with its defaults as practical is not an unreasonable tradeoff much of the time.
+#+BEGIN_QUOTE
+It is better to have 100 functions operate on one data structure than 10 functions on 10 data structures." —Alan Perlis
+#+END_QUOTE
+It's probably better to have that one data structure be as simple as possible (but no simpler), too.
+
+* Header
+Just some regular GreaseMonkey Boiler Plate. The comment format is used by GreaseMonkey as meta-data. 
+The namespace uses the traditional Java format (I own Kludgecode.com) because I have not seen a better way of choosing namespaces to avoid collisions. Not that namespaces are particularly important in the current context.
+#+BEGIN_SRC js
+  // ==UserScript==
+  // @name        hn_two_columns
+  // @namespace   com.kludgecode.hn
+  // @description Two column layout for Hacker News Main page and similar pages
+#+END_SRC
+The script will run on the following pages.
+#+BEGIN_SRC js
+  // @include     https://news.ycombinator.com/news*
+  // @include     https://news.ycombinator.com/ask*
+  // @include     https://news.ycombinator.com/show*
+  // @include     https://news.ycombinator.com/new*
+#+END_SRC
+Given the Github, I'm not sure I'll keep up with versioning but you never know...and I can make the bold claim that this is actually a 1.0 release! 
+The script grants no priviledges because none of the command need access to anything that lives outside the portions of the DOM and browser that are normally accessible to JavaScript.
+#+BEGIN_SRC js
+    // @version     1
+    // @grant       none
+    // ==/UserScript==
+#+END_SRC
+* Body
+The code more or less does two things:
+1. It scrapes the Hacker News markup for the thirty story items.
+2. It creates an HTML =<tr>= element with two =<td>= elements. One for the left column and one for the right column. It writes the first fifteen items to the left column's =<td>= and the next fifteen plus the |more| link to the right hand column's =<td>=.
+** Setup Document Structure
+The highest level element of the structure we are building is an HTML =<tr>= element. It will be inserted into an existing table.
+#+BEGIN_SRC js
+  (function () {
+  // r is the container for the content we build
+  var r = document.createElement('tr');
+#+END_SRC
+The two column layout will utilize =<td>= elements that will be inserted into the new table row. =left= will hold the first fifteen stories, =right= will hold the second fifteen plus the =|more|= link to the next page.
+#+BEGIN_SRC js
+  // it will display two columns
+  var left = document.createElement('td');
+  var right = document.createElement('td');
+#+END_SRC
+
+** Scraping
+There were some earlier versions of this code that did not include the =|more|= link that paginates Hacker News pages. Adding it significantly improved the user experience...well at least my user experience.
+
+#+BEGIN_SRC js
+    // get More link
+    var moreLink = document.getElementsByClassName('morelink')[0];
+#+END_SRC
+A Hacker News page is a hodgepodge of old style tables and some CSS and a bit of JavaScript. The CSS class =itemlist= lets us find the stories.
+*** CSS class itemlist
+There is only one element in the css class =itemlist=, a table containing all the stories. Because =getElementsByClassName= returns a collection, we have to pull the table out by its index.
+#+BEGIN_SRC js
+    // itemList[0] is the target document element
+    var itemList = document.getElementsByClassName('itemlist')[0];
+#+END_SRC
+
+*** A story item
+Each story element consists of a table with two rows. The table has no directly assigned CSS class but the first =<tr>= is assigned =athing=.
+#+BEGIN_EXAMPLE
+  <table>
+    <tb>
+      <tr class='athing'> </tr>
+      <tr> </tr>
+    </tb>
+  </table>
+#+END_EXAMPLE
+On Hacker News =athing= is used as the CSS class for a generic container. On Hacker News 30 item pages, =athing='s are =<tr>= elements containing three =<td>= elements (=athing='s have different =<td>='s on pages with comments). 
+
+The code uses =Array.prototype.slice= to convert a DOM collection into a JavaScript array. You'd think there would be a =toArray= method twenty years after JavaScript came on the scene. You'd be wrong.
+#+BEGIN_SRC js
+  // An array of the first row of each item
+  var row1 = Array.prototype.slice.call(document.getElementsByClassName('athing'), 0);
+#+END_SRC
+
+*** Building the table
+For each =athing= we will push it's next sibling [the second =<tr>= element of a story] into an array. 
+
+While in that loop, we'll make an arrays of 
+1. =<tb>= elements that can wrap the =athing= =<tr>= and its sibling =<tr>=
+2. =<table>= elements that will eventually contain the =<tb>= elements.
+
+#+BEGIN_SRC js
+  // the second row of each item; a table body that wraps both rows; a table that wraps the table body
+  var row2 = []; tb = []; t = [];
+
+  // control the loops
+  var len = row1.length;
+
+  // build the rest of the elements
+  for (var i = 0; i < len; i++) {
+    row2.push(row1[i].nextElementSibling);
+    tb.push(document.createElement('tb'));
+    t.push(document.createElement('table'));
+  };
+#+END_SRC
+
+Next we loop through the array of =<tb>= elements twice. First appending the =athing='s, then appending the sibling second row.
+
+#+BEGIN_SRC js
+ // add row1 elements to table body
+  for (var i = 0; i < len; i++) {
+    tb[i].appendChild(row1[i]);
+  };
+  // add row2 elements to table body
+  for (var i = 0; i < len; i++) {
+    tb[i].appendChild(row2[i]);
+  };
+#+END_SRC
+
+Finally, we construct the table for each story by appending the =<tb>='s.
+
+#+BEGIN_SRC js
+    // insert table bodies into item tables
+    for (var i = 0; i < len; i++) {
+      t[i].appendChild(tb[i]);
+    };
+#+END_SRC 
+** Construct Columns
+Insert the tables containing the stories into the top level =<td>= elements.
+#+BEGIN_SRC js
+    // build left column
+    for (var i = 0; i < len / 2; i++) {
+      left.appendChild(t[i])
+    };
+    //build right column
+    for (var i = len / 2; i < len; i++) {
+      right.appendChild(t[i])
+    };
+#+END_SRC
+And don't forget the the =|more|= link.
+#+BEGIN_SRC js
+    right.appendChild(moreLink); // don't forget the More link
+#+END_SRC 
+** Construct top level
+#+BEGIN_SRC js
+    // build row for itemList
+    r.appendChild(left);
+    r.appendChild(right);
+#+END_SRC 
+Erease existing list of stories and replace with the new two column structure.
+#+BEGIN_SRC js
+    // clear existing structure from itemList
+    itemList.innerHTML = "";
+    // insert new structure in itemList
+    itemList.append(r)
+  })();
+#+END_SRC 
+
