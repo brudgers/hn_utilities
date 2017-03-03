@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2017-03-03 Fri 13:21 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Two column layout for Hacker News</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="benrudgers" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Two column layout for Hacker News</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org5cb7735">Preface</a></li>
+<li><a href="#orgbff4f56">Introduction: HN's HTML</a></li>
+<li><a href="#org4784bd2">Header</a></li>
+<li><a href="#org9856007">Body</a>
+<ul>
+<li><a href="#orgab8683e">Setup Document Structure</a></li>
+<li><a href="#org2444af3">Scraping</a>
+<ul>
+<li><a href="#orge38db23">CSS class itemlist</a></li>
+<li><a href="#org00ca82b">A story item</a></li>
+<li><a href="#orgebb9584">Building the table</a></li>
+</ul>
+</li>
+<li><a href="#orgaa1aa36">Construct Columns</a></li>
+<li><a href="#org976f14e">Construct top level</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5cb7735" class="outline-2">
+<h2 id="org5cb7735">Preface</h2>
+<div class="outline-text-2" id="text-org5cb7735">
+<p>
+This code is designed to run as a user script in FireFox using GreaseMonkey. It creates a two column layout for the Hacker News Main page and similar Hacker News pages that are lists of thirty stories.
+</p>
+
+<p>
+It should also run in Chrome or Chromium using the TamperMonkey plugin. However, TamperMonkey's implementation does not allow it to read files and the code must be copy pasted into the TamperMonkey editor or imported with some sort of database workaround if such a thing exists.
+</p>
+</div>
+</div>
+<div id="outline-container-orgbff4f56" class="outline-2">
+<h2 id="orgbff4f56">Introduction: HN's HTML</h2>
+<div class="outline-text-2" id="text-orgbff4f56">
+<p>
+There's a lot of griping about Hacker News's use of tables as if it was 1997&#x2026;I've committed some of it (along with cursing). Usually it is motivated by the idea that CSS [and particularly CSS grids] would be better.
+</p>
+
+<p>
+I'm pretty much convinced that it would not. Organizing an HTML page with tables versus a CSS grid means that a page's structure can be generated recursively by a server side program more directly. There's no keeping track of which <code>&lt;div&gt;</code> gets some class to  <code>&lt;float-left&gt;</code> and which does not and hence will appear on the right (hopefully if all goes well). The first <code>&lt;td&gt;</code> will be left of the next. The first <code>&lt;tr&gt;</code> will be above the next.
+</p>
+
+<p>
+Sequences are an excellent way of organizing information left2right and top2bottom without a lot of hand-crafted design effort and a letting the browser handle as much of the layout with its defaults as practical is not an unreasonable tradeoff much of the time.
+</p>
+<blockquote>
+<p>
+It is better to have 100 functions operate on one data structure than 10 functions on 10 data structures." —Alan Perlis
+</p>
+</blockquote>
+<p>
+It's probably better to have that one data structure be as simple as possible (but no simpler), too.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4784bd2" class="outline-2">
+<h2 id="org4784bd2">Header</h2>
+<div class="outline-text-2" id="text-org4784bd2">
+<p>
+Just some regular GreaseMonkey Boiler Plate. The comment format is used by GreaseMonkey as meta-data. 
+The namespace uses the traditional Java format (I own Kludgecode.com) because I have not seen a better way of choosing namespaces to avoid collisions. Not that namespaces are particularly important in the current context.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">// ==UserScript==
+// @name        hn_two_columns
+// @namespace   com.kludgecode.hn
+// @description Two column layout for Hacker News Main page and similar pages
+</pre>
+</div>
+<p>
+The script will run on the following pages.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">// @include     https://news.ycombinator.com/news*
+// @include     https://news.ycombinator.com/ask*
+// @include     https://news.ycombinator.com/show*
+// @include     https://news.ycombinator.com/new*
+</pre>
+</div>
+<p>
+Given the Github, I'm not sure I'll keep up with versioning but you never know&#x2026;and I can make the bold claim that this is actually a 1.0 release! 
+The script grants no priviledges because none of the command need access to anything that lives outside the portions of the DOM and browser that are normally accessible to JavaScript.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">// @version     1
+// @grant       none
+// ==/UserScript==
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9856007" class="outline-2">
+<h2 id="org9856007">Body</h2>
+<div class="outline-text-2" id="text-org9856007">
+<p>
+The code more or less does two things:
+</p>
+<ol class="org-ol">
+<li>It scrapes the Hacker News markup for the thirty story items.</li>
+<li>It creates an HTML <code>&lt;tr&gt;</code> element with two <code>&lt;td&gt;</code> elements. One for the left column and one for the right column. It writes the first fifteen items to the left column's <code>&lt;td&gt;</code> and the next fifteen plus the |more| link to the right hand column's <code>&lt;td&gt;</code>.</li>
+</ol>
+</div>
+<div id="outline-container-orgab8683e" class="outline-3">
+<h3 id="orgab8683e">Setup Document Structure</h3>
+<div class="outline-text-3" id="text-orgab8683e">
+<p>
+The highest level element of the structure we are building is an HTML <code>&lt;tr&gt;</code> element. It will be inserted into an existing table.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">(function () {
+// r is the container for the content we build
+var r = document.createElement('tr');
+</pre>
+</div>
+<p>
+The two column layout will utilize <code>&lt;td&gt;</code> elements that will be inserted into the new table row. <code>left</code> will hold the first fifteen stories, <code>right</code> will hold the second fifteen plus the <code>|more|</code> link to the next page.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">// it will display two columns
+var left = document.createElement('td');
+var right = document.createElement('td');
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2444af3" class="outline-3">
+<h3 id="org2444af3">Scraping</h3>
+<div class="outline-text-3" id="text-org2444af3">
+<p>
+There were some earlier versions of this code that did not include the <code>|more|</code> link that paginates Hacker News pages. Adding it significantly improved the user experience&#x2026;well at least my user experience.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js">// get More link
+var moreLink = document.getElementsByClassName('morelink')[0];
+</pre>
+</div>
+<p>
+A Hacker News page is a hodgepodge of old style tables and some CSS and a bit of JavaScript. The CSS class <code>itemlist</code> lets us find the stories.
+</p>
+</div>
+<div id="outline-container-orge38db23" class="outline-4">
+<h4 id="orge38db23">CSS class itemlist</h4>
+<div class="outline-text-4" id="text-orge38db23">
+<p>
+There is only one element in the css class <code>itemlist</code>, a table containing all the stories. Because <code>getElementsByClassName</code> returns a collection, we have to pull the table out by its index.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">// itemList[0] is the target document element
+var itemList = document.getElementsByClassName('itemlist')[0];
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org00ca82b" class="outline-4">
+<h4 id="org00ca82b">A story item</h4>
+<div class="outline-text-4" id="text-org00ca82b">
+<p>
+Each story element consists of a table with two rows. The table has no directly assigned CSS class but the first <code>&lt;tr&gt;</code> is assigned <code>athing</code>.
+</p>
+<pre class="example">
+&lt;table&gt;
+  &lt;tb&gt;
+    &lt;tr class='athing'&gt; &lt;/tr&gt;
+    &lt;tr&gt; &lt;/tr&gt;
+  &lt;/tb&gt;
+&lt;/table&gt;
+</pre>
+<p>
+On Hacker News <code>athing</code> is used as the CSS class for a generic container. On Hacker News 30 item pages, <code>athing</code>'s are <code>&lt;tr&gt;</code> elements containing three <code>&lt;td&gt;</code> elements (<code>athing</code>'s have different <code>&lt;td&gt;</code>'s on pages with comments). 
+</p>
+
+<p>
+The code uses <code>Array.prototype.slice</code> to convert a DOM collection into a JavaScript array. You'd think there would be a <code>toArray</code> method twenty years after JavaScript came on the scene. You'd be wrong.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">// An array of the first row of each item
+var row1 = Array.prototype.slice.call(document.getElementsByClassName('athing'), 0);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgebb9584" class="outline-4">
+<h4 id="orgebb9584">Building the table</h4>
+<div class="outline-text-4" id="text-orgebb9584">
+<p>
+For each <code>athing</code> we will push it's next sibling [the second <code>&lt;tr&gt;</code> element of a story] into an array. 
+</p>
+
+<p>
+While in that loop, we'll make an arrays of 
+</p>
+<ol class="org-ol">
+<li><code>&lt;tb&gt;</code> elements that can wrap the <code>athing</code> <code>&lt;tr&gt;</code> and its sibling <code>&lt;tr&gt;</code></li>
+<li><code>&lt;table&gt;</code> elements that will eventually contain the <code>&lt;tb&gt;</code> elements.</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-js">// the second row of each item; a table body that wraps both rows; a table that wraps the table body
+var row2 = []; tb = []; t = [];
+
+// control the loops
+var len = row1.length;
+
+// build the rest of the elements
+for (var i = 0; i &lt; len; i++) {
+  row2.push(row1[i].nextElementSibling);
+  tb.push(document.createElement('tb'));
+  t.push(document.createElement('table'));
+};
+</pre>
+</div>
+
+<p>
+Next we loop through the array of <code>&lt;tb&gt;</code> elements twice. First appending the <code>athing</code>'s, then appending the sibling second row.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js">// add row1 elements to table body
+ for (var i = 0; i &lt; len; i++) {
+   tb[i].appendChild(row1[i]);
+ };
+ // add row2 elements to table body
+ for (var i = 0; i &lt; len; i++) {
+   tb[i].appendChild(row2[i]);
+ };
+</pre>
+</div>
+
+<p>
+Finally, we construct the table for each story by appending the <code>&lt;tb&gt;</code>'s.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js">// insert table bodies into item tables
+for (var i = 0; i &lt; len; i++) {
+  t[i].appendChild(tb[i]);
+};
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgaa1aa36" class="outline-3">
+<h3 id="orgaa1aa36">Construct Columns</h3>
+<div class="outline-text-3" id="text-orgaa1aa36">
+<p>
+Insert the tables containing the stories into the top level <code>&lt;td&gt;</code> elements.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">// build left column
+for (var i = 0; i &lt; len / 2; i++) {
+  left.appendChild(t[i])
+};
+//build right column
+for (var i = len / 2; i &lt; len; i++) {
+  right.appendChild(t[i])
+};
+</pre>
+</div>
+<p>
+And don't forget the the <code>|more|</code> link.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">right.appendChild(moreLink); // don't forget the More link
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org976f14e" class="outline-3">
+<h3 id="org976f14e">Construct top level</h3>
+<div class="outline-text-3" id="text-org976f14e">
+<div class="org-src-container">
+<pre class="src src-js">// build row for itemList
+r.appendChild(left);
+r.appendChild(right);
+</pre>
+</div>
+<p>
+Erease existing list of stories and replace with the new two column structure.
+</p>
+<div class="org-src-container">
+<pre class="src src-js">  // clear existing structure from itemList
+  itemList.innerHTML = "";
+  // insert new structure in itemList
+  itemList.append(r)
+})();
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: benrudgers</p>
+<p class="date">Created: 2017-03-03 Fri 13:21</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
